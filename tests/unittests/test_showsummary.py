@@ -1,6 +1,6 @@
 import pytest
 
-from server import app, clubs, show_summary
+from server import app, clubs
 
 @pytest.fixture
 def valid_mail():
