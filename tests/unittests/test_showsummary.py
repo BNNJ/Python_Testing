@@ -1,24 +1,15 @@
 import pytest
 
-from server import app, clubs
-
-@pytest.fixture
-def valid_mail():
-	return next(c['email'] for c in clubs)
-
-@pytest.fixture
-def invalid_mail():
-	mails = [c['email'] for c in clubs]
-	return ''.join(m[i] if len(m) < i else '_' for i, m in enumerate(mails))
+from server import app
 
 def test_response(valid_mail):
 	app.testing
 	with app.test_client() as c:
 		r = c.post('/showSummary', data={'email': valid_mail})
-		assert r.status_code == 200
+	assert r.status_code == 200
 
-def test_invalidmail(invalid_mail):
+def test_invalidmail(inexistent_mail):
 	app.testing
 	with app.test_client() as c:
-		r = c.post('/showSummary', data={'email': invalid_mail})
-		assert r.status_code == 302
+		r = c.post('/showSummary', data={'email': inexistent_mail})
+	assert r.status_code == 302
