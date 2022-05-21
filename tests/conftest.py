@@ -34,3 +34,4 @@ def invalid_mail():
 @pytest.fixture
 def inexistent_mail():
 	return "fakemail@mail.com"
+
