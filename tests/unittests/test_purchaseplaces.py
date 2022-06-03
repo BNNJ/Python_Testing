@@ -22,9 +22,20 @@ def test_not_enough_points(no_points_club, simple_competition):
 		data = {
 			'club': no_points_club['name'],
 			'competition': simple_competition['name'],
-			'places': 24
+			'places': 5
 		}
 		r = c.post('/purchasePlaces', data=data)
 
 	assert "You don&#39;t have enough points" in str(r.data)
-	# assert r.status_code == 200
+
+def test_more_than_12_places(lots_of_points_club, simple_competition):
+	app.testing
+	with app.test_client() as c:
+		data = {
+			'club': lots_of_points_club['name'],
+			'competition': simple_competition['name'],
+			'places': 24
+		}
+		r = c.post('/purchasePlaces', data=data)
+
+	assert "You can&#39;t request more than 12 places" in str(r.data)

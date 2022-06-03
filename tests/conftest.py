@@ -37,6 +37,10 @@ def no_points_club():
 	return server.clubs[1]
 
 @pytest.fixture
+def lots_of_points_club():
+	return server.clubs[3]
+
+@pytest.fixture
 def valid_mail():
 	return server.clubs[0]['email']
 
@@ -54,12 +58,12 @@ def test_competitions(mocker):
 	competitions = [
 		{
 			'name': "simple_competition",
-			'date': "2022-06-27 10:00:00",
+			'date': "2023-06-27 10:00:00",
 			'numberOfPlaces': 13
 		},
 		{
 			'name': "few_places",
-			'date': "2022-06-27 10:00:00",
+			'date': "2023-06-27 10:00:00",
 			'numberOfPlaces': 3
 		},
 		{
