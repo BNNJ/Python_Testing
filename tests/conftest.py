@@ -16,6 +16,11 @@ def test_clubs(mocker):
 			'points': 0
 		},
 		{
+			'name': "low_points",
+			'email': "lowpoints@mail.com",
+			'points': 2
+		},
+		{
 			'name': "lots_of_points",
 			'email': "lotsofpoints@mail.com",
 			'points': 123
@@ -26,6 +31,10 @@ def test_clubs(mocker):
 @pytest.fixture
 def simple_club():
 	return server.clubs[0]
+
+@pytest.fixture
+def no_points_club():
+	return server.clubs[1]
 
 @pytest.fixture
 def valid_mail():
