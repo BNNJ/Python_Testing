@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 from flask import Flask, render_template, request, redirect, flash, url_for
 
 
@@ -37,19 +38,25 @@ def show_summary():
 
 @app.route('/book/<competition>/<club>')
 def book(competition, club):
-	found_club = [c for c in clubs if c['name'] == club][0]
-	found_competition = [c for c in competitions if c['name'] == competition][0]
-	if found_club and found_competition:
-		return render_template('booking.html', club=found_club, competition=found_competition)
-	else:
+	found_club = next((c for c in clubs if c['name'] == club), None)
+	found_competition = next((c for c in competitions if c['name'] == competition), None)
+
+	if found_club is None or found_competition is None:
 		flash("Something went wrong-please try again")
 		return render_template('welcome.html', club=club, competitions=competitions)
+	elif datetime.strptime(found_competition['date'], "%Y-%m-%d %H:%M:%S") < datetime.now():
+		flash("This competition has already taken place")
+		return render_template('welcome.html', club=club, competitions=competitions)
+	else:
+		return render_template('booking.html', club=found_club, competition=found_competition)
 
 
 @app.route('/purchasePlaces', methods=['POST'])
 def purchase_places():
 	competition = next((c for c in competitions if c['name'] == request.form['competition']), None)
 	club = next((c for c in clubs if c['name'] == request.form['club']), None)
+
+
 	places_requested = int(request.form['places'])
 	if places_requested > 12:
 		flash("You can't request more than 12 places")
