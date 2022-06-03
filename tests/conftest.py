@@ -94,7 +94,7 @@ def no_places_competition():
 	return server.competitions[2]
 
 @pytest.fixture
-def far_future_competition():
+def future_competition():
 	return server.competitions[3]
 
 @pytest.fixture
