@@ -40,7 +40,7 @@ def show_summary():
 		flash("No club with this email was found")
 		return redirect(url_for('index'))
 	else:
-		return render_template('welcome.html', club=club, competitions=competitions)
+		return render_template('welcome.html', club=club, competitions=competitions, clubs=clubs)
 
 
 @app.route('/book/<competition>/<club>')
