@@ -39,7 +39,7 @@ def book(competition, club):
 	if found_club is None or found_competition is None:
 		flash("Something went wrong-please try again")
 		return render_template('welcome.html', club=club, competitions=competitions)
-	elif date_is_past(found_competition['date'], "%Y-%m-%d %H:%M:%S"):
+	elif date_is_past(found_competition['date']):
 		flash("This competition has already taken place")
 		return render_template('welcome.html', club=club, competitions=competitions)
 	else:

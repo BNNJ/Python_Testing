@@ -22,7 +22,7 @@ def save_competitions(competitions):
 def get_item(iterable, predicat):
 	return next((item for item in iterable if predicat(item)), None)
 
-def date_is_past(datestr, formatstr):
+def date_is_past(datestr, formatstr="%Y-%m-%d %H:%M:%S"):
 	return datetime.strptime(datestr, formatstr) < datetime.now()
 
 def purchase_error(requested, available):
