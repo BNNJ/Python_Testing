@@ -1,0 +1,34 @@
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Score Board | GUDLFT Registration</title>
+</head>
+<body>
+	{% with messages = get_flashed_messages() %}
+	{% if messages %}
+		<ul>
+	   {% for message in messages %}
+			<li>{{message}}</li>
+		{% endfor %}
+	   </ul>
+	{% endif %}
+	{% endwith %}
+	<table style="margin: 50px; width: 200px">
+		<thead>
+			<tr>
+				<th colspan="2" style="color: white; background-color: grey;">
+					Score board
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for c in clubs %}
+			<tr>
+				<td>{{c['name']}}</td>
+				<td>{{ c['points']}}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+</body>
+</html>

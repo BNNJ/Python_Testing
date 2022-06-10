@@ -27,7 +27,7 @@ def show_summary():
 		flash("No club with this email was found")
 		return redirect(url_for('index'))
 	else:
-		return render_template('welcome.html', club=club, competitions=competitions, clubs=clubs)
+		return render_template('welcome.html', club=club, competitions=competitions)
 
 
 @app.route('/book/<competition>/<club>')
@@ -65,7 +65,9 @@ def purchase_places():
 
 
 # TODO: Add route for points display
-
+@app.route('/displayBoard')
+def display_board():
+	return render_template('display_board.html', clubs=clubs)
 
 @app.route('/logout')
 def logout():

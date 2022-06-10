@@ -31,14 +31,7 @@
 		<hr />
 		{% endfor %}
 	</ul>
-	<h3>Points display board:</h3>
-	<ul>
-		{% for c in clubs %}
-		<li>
-			{{c['name']}}: {{ c['points']}}<br />
-		</li>
-		{% endfor %}
-	</ul>
+	<a href="{{ url_for('display_board') }}">Score board</a>
 
 </body>
 </html>
