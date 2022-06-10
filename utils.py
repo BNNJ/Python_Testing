@@ -25,7 +25,10 @@ def get_item(iterable, predicat):
 def date_is_past(datestr, formatstr):
 	return datetime.strptime(datestr, formatstr) < datetime.now()
 
-def r():
-	with open('clubs.json') as f:
-		d = f.read()
-	return d
+def purchase_is_invalid(requested, available):
+	if requested > 12:
+		return "You can't request more than 12 places"
+	elif requested > available:
+		return "You don't have enough points to book that many places"
+	else:
+		return None

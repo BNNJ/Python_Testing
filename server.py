@@ -51,16 +51,14 @@ def purchase_places():
 	club = get_item(clubs, lambda c: c['name'] == request.form['club'])
 
 	places_requested = int(request.form['places'])
-	if places_requested > 12:
-		flash("You can't request more than 12 places")
-		return render_template("booking.html", club=club, competition=competition)
-	elif places_requested > int(club['points']):
-		flash("You don't have enough points to book that many places")
+	if err_msg := purchase_is_invalid(places_requested, club['points']) is not None:
+		flash(err_msg)
 		return render_template("booking.html", club=club, competition=competition)
 	else:
 		competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - places_requested
 		club['points'] = int(club['points']) - places_requested
 		# save_clubs(clubs)
+		# save_competitions(competitions)
 		flash("Great-booking complete!")
 		return render_template('welcome.html', club=club, competitions=competitions)
 
