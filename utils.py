@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 
 def load_clubs():
 	with open('clubs.json', 'r') as f:
@@ -20,3 +21,6 @@ def save_competitions():
 
 def get_item(iterable, predicat):
 	return next((item for item in iterable if predicat(item)), None)
+
+def date_is_past(datestr, formatstr):
+	return datetime.strptime(datestr, formatstr) < datetime.now()
