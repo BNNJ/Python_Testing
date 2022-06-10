@@ -4,6 +4,8 @@ from datetime import datetime
 def load_clubs():
 	with open('clubs.json', 'r') as f:
 		list_of_clubs = json.load(f)['clubs']
+	for club in list_of_clubs:
+		club['points'] = int(club['points'])
 	return list_of_clubs
 
 def save_clubs(clubs):
@@ -13,6 +15,8 @@ def save_clubs(clubs):
 def load_competitions():
 	with open('competitions.json', 'r') as f:
 		list_of_competitions = json.load(f)['competitions']
+	for competition in list_of_competitions:
+		competition['numberOfPlaces'] = int(competition['numberOfPlaces'])
 	return list_of_competitions
 
 def save_competitions(competitions):

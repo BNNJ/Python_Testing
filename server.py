@@ -52,12 +52,12 @@ def purchase_places():
 	club = get_item(clubs, lambda c: c['name'] == request.form['club'])
 
 	places_requested = int(request.form['places'])
-	if err := purchase_error(places_requested, int(club['points'])):
+	if err := purchase_error(places_requested, club['points']):
 		flash(err)
 		return render_template("booking.html", club=club, competition=competition)
 	else:
-		competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - places_requested
-		club['points'] = int(club['points']) - places_requested
+		competition['numberOfPlaces'] -= places_requested
+		club['points'] -= places_requested
 		# save_clubs(clubs)
 		# save_competitions(competitions)
 		flash("Great-booking complete!")
