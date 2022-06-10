@@ -2,25 +2,13 @@ import json
 from datetime import datetime
 from flask import Flask, render_template, request, redirect, flash, url_for
 
-
-def load_clubs():
-	with open('clubs.json', 'r') as f:
-		list_of_clubs = json.load(f)['clubs']
-	return list_of_clubs
-
-def save_clubs():
-	with open('clubs.json', 'w') as f:
-		json.dump({'clubs': clubs}, f)
-
-def load_competitions():
-	with open('competitions.json', 'r') as f:
-		list_of_competitions = json.load(f)['competitions']
-	return list_of_competitions
-
-def save_competitions():
-	with open('competitions.json', 'w') as f:
-		json.dump(f, {'competitions': competitions})
-
+from utils import (
+	load_clubs,
+	load_competitions,
+	save_clubs,
+	save_competitions,
+	get_item
+)
 
 app = Flask(__name__)
 app.secret_key = "something_special"
@@ -35,7 +23,8 @@ def index():
 
 @app.route('/showSummary', methods=['POST'])
 def show_summary():
-	club = next((club for club in clubs if club['email'] == request.form['email']), None)
+	# club = next((club for club in clubs if club['email'] == request.form['email']), None)
+	club = get_item(clubs, lambda c: c['email'] == request.form['email'])
 	if club is None:
 		flash("No club with this email was found")
 		return redirect(url_for('index'))
@@ -45,8 +34,10 @@ def show_summary():
 
 @app.route('/book/<competition>/<club>')
 def book(competition, club):
-	found_club = next((c for c in clubs if c['name'] == club), None)
-	found_competition = next((c for c in competitions if c['name'] == competition), None)
+	# found_club = next((c for c in clubs if c['name'] == club), None)
+	found_club = get_item(clubs, lambda c: c['name'] == club)
+	# found_competition = next((c for c in competitions if c['name'] == competition), None)
+	found_competition = get_item(competitions, lambda c: c['name'] == competition)
 
 	if found_club is None or found_competition is None:
 		flash("Something went wrong-please try again")
@@ -60,8 +51,9 @@ def book(competition, club):
 
 @app.route('/purchasePlaces', methods=['POST'])
 def purchase_places():
-	competition = next((c for c in competitions if c['name'] == request.form['competition']), None)
-	club = next((c for c in clubs if c['name'] == request.form['club']), None)
+	# competition = next((c for c in competitions if c['name'] == request.form['competition']), None)
+	competition = get_item(competitions, c['name'] == request.form['competition'])
+	club = get_item(clubs, c['name'] == request.form['club'])
 
 	places_requested = int(request.form['places'])
 	if places_requested > 12:
