@@ -6,7 +6,8 @@ from utils import (
 	save_clubs,
 	save_competitions,
 	get_item,
-	date_is_past
+	date_is_past,
+	purchase_error
 )
 
 app = Flask(__name__)
@@ -51,8 +52,8 @@ def purchase_places():
 	club = get_item(clubs, lambda c: c['name'] == request.form['club'])
 
 	places_requested = int(request.form['places'])
-	if err_msg := purchase_is_invalid(places_requested, club['points']) is not None:
-		flash(err_msg)
+	if err := purchase_error(places_requested, int(club['points'])):
+		flash(err)
 		return render_template("booking.html", club=club, competition=competition)
 	else:
 		competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - places_requested

@@ -25,7 +25,7 @@ def get_item(iterable, predicat):
 def date_is_past(datestr, formatstr):
 	return datetime.strptime(datestr, formatstr) < datetime.now()
 
-def purchase_is_invalid(requested, available):
+def purchase_error(requested, available):
 	if requested > 12:
 		return "You can't request more than 12 places"
 	elif requested > available:
