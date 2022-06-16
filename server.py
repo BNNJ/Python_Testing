@@ -3,8 +3,6 @@ from flask import Flask, render_template, request, redirect, flash, url_for
 from utils import (
 	load_clubs,
 	load_competitions,
-	save_clubs,
-	save_competitions,
 	get_item,
 	date_is_past,
 	purchase_error
@@ -13,8 +11,11 @@ from utils import (
 app = Flask(__name__)
 app.secret_key = "something_special"
 
-competitions = load_competitions()
-clubs = load_clubs()
+clubs_file = "clubs.json"
+competitions_file = "competitions.json"
+
+competitions = load_competitions(competitions_file)
+clubs = load_clubs(clubs_file)
 
 @app.route('/')
 def index():
