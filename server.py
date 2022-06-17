@@ -3,8 +3,6 @@ from flask import Flask, render_template, request, redirect, flash, url_for
 from utils import (
 	load_clubs,
 	load_competitions,
-	save_clubs,
-	save_competitions,
 	get_item,
 	date_is_past,
 	purchase_error
@@ -13,8 +11,11 @@ from utils import (
 app = Flask(__name__)
 app.secret_key = "something_special"
 
-competitions = load_competitions()
-clubs = load_clubs()
+clubs_file = "clubs.json"
+competitions_file = "competitions.json"
+
+competitions = load_competitions(competitions_file)
+clubs = load_clubs(clubs_file)
 
 @app.route('/')
 def index():
@@ -52,12 +53,12 @@ def purchase_places():
 	club = get_item(clubs, lambda c: c['name'] == request.form['club'])
 
 	places_requested = int(request.form['places'])
-	if err := purchase_error(places_requested, int(club['points'])):
+	if err := purchase_error(places_requested, club['points']):
 		flash(err)
 		return render_template("booking.html", club=club, competition=competition)
 	else:
-		competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - places_requested
-		club['points'] = int(club['points']) - places_requested
+		competition['numberOfPlaces'] -= places_requested
+		club['points'] -= places_requested
 		# save_clubs(clubs)
 		# save_competitions(competitions)
 		flash("Great-booking complete!")
