@@ -4,7 +4,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Score Board | GUDLFT Registration</title>
 </head>
-<body>
+<body style="margin: 50px;">
+	<h2>Gudlift Score board </h2>
+	<a href="{{ url_for('index') }}">Back to index</a>
 	{% with messages = get_flashed_messages() %}
 	{% if messages %}
 		<ul>
@@ -14,7 +16,7 @@
 	   </ul>
 	{% endif %}
 	{% endwith %}
-	<table style="margin: 50px; width: 200px">
+	<table style="margin-top: 20px; width: 200px;">
 		<thead>
 			<tr>
 				<th colspan="2" style="color: white; background-color: grey;">
