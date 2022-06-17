@@ -31,6 +31,11 @@ def show_summary():
 	else:
 		return render_template('welcome.html', club=club, competitions=competitions)
 
+# @app.route('/book', methods=['POST'])
+# def book():
+# 	found_club = get_item(clubs, lambda c: c['name'] == request.form['club'])
+# 	found_competition = get_item(competitions, lambda c: c['name'] == request.form['competition'])
+
 
 @app.route('/book/<competition>/<club>')
 def book(competition, club):
@@ -42,7 +47,8 @@ def book(competition, club):
 		return render_template('welcome.html', club=club, competitions=competitions)
 	elif date_is_past(found_competition['date']):
 		flash("This competition has already taken place")
-		return render_template('welcome.html', club=club, competitions=competitions)
+		return redirect(url_for('show_summary'), code=307)
+		# return render_template('welcome.html', club=club, competitions=competitions)
 	else:
 		return render_template('booking.html', club=found_club, competition=found_competition)
 
