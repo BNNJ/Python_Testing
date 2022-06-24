@@ -79,5 +79,6 @@ def display_board():
 def logout():
 	global club
 	club = None
+	flash("Goodbye, see you soon!")
 	return redirect(url_for('index'))
 	
