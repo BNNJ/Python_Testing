@@ -18,3 +18,4 @@ def test_showsummary(mocker):
 
 	assert r.status_code == 200
 	assert f"<h2>Welcome, {club['email']} </h2>" in str(r.data)
+	
