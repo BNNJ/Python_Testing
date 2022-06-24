@@ -61,7 +61,7 @@ def purchase_places():
 	places_requested = int(request.form['places'])
 	if err := purchase_error(places_requested, club['points']):
 		flash(err)
-		return redirect(url_for('book', competition=competition))
+		return redirect(url_for('book', competition=competition['name']))
 	else:
 		competition['numberOfPlaces'] -= places_requested
 		club['points'] -= places_requested
@@ -76,6 +76,8 @@ def display_board():
 
 @app.route('/logout')
 def logout():
-	club=None
+	global club
+	club = None
+	flash("Goodbye, see you soon!")
 	return redirect(url_for('index'))
 	
