@@ -63,3 +63,24 @@ def test_more_than_12_places(mocker):
 	assert r.status_code == 302
 	assert "You can't request more than 12 places" in flashed_messages
 	assert club['points'] == current_points
+
+def test_less_than_1_place(mocker):
+	club = get_item(server.clubs, lambda x: x['name'] == "simple_club")
+	competition = get_item(server.competitions, lambda x: x['name'] == "simple_competition")
+	mocker.patch.object(server, 'club', club)
+	current_points = club['points']
+
+	server.app.testing
+	with server.app.test_client() as c:
+		data = {
+			'club': club['name'],
+			'competition': competition['name'],
+			'places': -2
+		}
+		r = c.post('/purchasePlaces', data=data)
+		flashed_messages = get_flashed_messages()
+
+	assert r.status_code == 302
+	assert "Invalid number of places requested" in flashed_messages
+	assert club['points'] == current_points
+	

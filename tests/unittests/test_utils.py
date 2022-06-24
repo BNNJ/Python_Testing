@@ -141,7 +141,17 @@ class TestPurchaseError:
 		assert actual == expected
 
 	@staticmethod
-	def test_more_than_twelve_and_points():
+	def test_less_than_one():
+		requested = -2
+		available = 21
+
+		expected = "Invalid number of places requested"
+		actual = purchase_error(requested, available)
+
+		assert actual == expected
+
+	@staticmethod
+	def test_more_than_twelve_and_not_enough_points():
 		requested = 21
 		available = 2
 

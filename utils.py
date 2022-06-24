@@ -24,6 +24,8 @@ def date_is_past(datestr, formatstr="%Y-%m-%d %H:%M:%S"):
 def purchase_error(requested, available):
 	if requested > 12:
 		return "You can't request more than 12 places"
+	elif requested <= 0:
+		return "Invalid number of places requested"
 	elif requested > available:
 		return "You don't have enough points to book that many places"
 	else:
