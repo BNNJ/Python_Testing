@@ -28,37 +28,12 @@ def test_clubs(mocker):
 	]
 	mocker.patch.object(server, 'clubs', clubs)
 
-@pytest.fixture
-def simple_club():
-	return server.clubs[0]
-
-@pytest.fixture
-def no_points_club():
-	return server.clubs[1]
-
-@pytest.fixture
-def lots_of_points_club():
-	return server.clubs[3]
-
-@pytest.fixture
-def valid_mail():
-	return server.clubs[0]['email']
-
-@pytest.fixture
-def invalid_mail():
-	return "invalid_mail@"
-
-@pytest.fixture
-def inexistent_mail():
-	return "fakemail@mail.com"
-
-
 @pytest.fixture(autouse=True)
 def test_competitions(mocker):
 	competitions = [
 		{
 			'name': "simple_competition",
-			'date': "2023-06-27 10:00:00",
+			'date': "2033-06-27 10:00:00",
 			'numberOfPlaces': 13
 		},
 		{
@@ -83,21 +58,3 @@ def test_competitions(mocker):
 		},
 	]
 	mocker.patch.object(server, 'competitions', competitions)
-
-
-@pytest.fixture
-def simple_competition():
-	return server.competitions[0]
-
-@pytest.fixture
-def no_places_competition():
-	return server.competitions[2]
-
-@pytest.fixture
-def future_competition():
-	return server.competitions[3]
-
-@pytest.fixture
-def past_competition():
-	return server.competitions[4]
-

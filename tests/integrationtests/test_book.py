@@ -1,23 +1,33 @@
 import pytest
+from flask import get_flashed_messages
 
-from server import app
+import server
+from utils import get_item
 
-def test_response(simple_club, simple_competition):
-	app.testing
-	with app.test_client() as c:
-		r = c.get(f"/book/{simple_competition['name']}/{simple_club['name']}")
+def test_valid_competition(mocker):
+	club = get_item(server.clubs, lambda x: x['name'] == "simple_club")
+	competition = get_item(server.competitions, lambda x: x['name'] == "simple_competition")
+	mocker.patch.object(server, 'club', club)
+
+	server.app.testing
+	with server.app.test_client() as c:
+		r = c.get(f"/book/{competition['name']}")
+		flashed_messages = get_flashed_messages()
+
 	assert r.status_code == 200
+	assert "<title>Booking for simple_competition || GUDLFT</title>" in str(r.data)
+	assert flashed_messages == []
 
-def test_old_competition(simple_club, past_competition):
-	app.testing
-	with app.test_client() as c:
-		r = c.get(f"/book/{past_competition['name']}/{simple_club['name']}")
-	assert r.status_code == 200
-	assert "This competition has already taken place" in str(r.data)
+def test_past_competition(mocker):
+	club = get_item(server.clubs, lambda x: x['name'] == "simple_club")
+	competition = get_item(server.competitions, lambda x: x['name'] == "past_competition")
+	mocker.patch.object(server, 'club', club)
 
-def test_future_competition(simple_club, future_competition):
-	app.testing
-	with app.test_client() as c:
-		r = c.get(f"/book/{future_competition['name']}/{simple_club['name']}")
-	assert r.status_code == 200
-	assert "This competition has already taken place" not in str(r.data)
+	server.app.testing
+	with server.app.test_client() as c:
+		r = c.get(f"/book/{competition['name']}")
+		flashed_messages = get_flashed_messages()
+
+	assert r.status_code == 302
+	assert 'You should be redirected automatically to target URL: <a href="/showSummary">/showSummary</a>' in str(r.data)
+	assert "This competition has already taken place" in flashed_messages

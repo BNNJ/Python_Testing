@@ -1,55 +1,65 @@
 import pytest
+from flask import get_flashed_messages
 
-from server import app
+import server
+from utils import get_item
 
-def test_response(simple_club, simple_competition):
-	app.testing
-	with app.test_client() as c:
+def test_valid_purchase(mocker):
+	club = get_item(server.clubs, lambda x: x['name'] == "simple_club")
+	competition = get_item(server.competitions, lambda x: x['name'] == "simple_competition")
+	mocker.patch.object(server, 'club', club)
+	current_points = club['points']
+
+	server.app.testing
+	with server.app.test_client() as c:
 		data = {
-			'club': simple_club['name'],
-			'competition': simple_competition['name'],
+			'club': club['name'],
+			'competition': competition['name'],
 			'places': 2
 		}
 		r = c.post('/purchasePlaces', data=data)
 
-	assert simple_competition['name'] == "simple_competition"
-	assert simple_club['name'] == "simple_club"
-	assert r.status_code == 200
+	assert competition['name'] == "simple_competition"
+	assert club['name'] == "simple_club"
+	assert r.status_code == 302
+	assert club['points'] == current_points - 2
 
-def test_not_enough_points(no_points_club, simple_competition):
-	app.testing
-	with app.test_client() as c:
+def test_not_enough_points(mocker):
+	club = get_item(server.clubs, lambda x: x['name'] == "low_points")
+	competition = get_item(server.competitions, lambda x: x['name'] == "simple_competition")
+	mocker.patch.object(server, 'club', club)
+	current_points = club['points']
+
+	server.app.testing
+	with server.app.test_client() as c:
 		data = {
-			'club': no_points_club['name'],
-			'competition': simple_competition['name'],
-			'places': 5
+			'club': club['name'],
+			'competition': competition['name'],
+			'places': 10
 		}
 		r = c.post('/purchasePlaces', data=data)
+		flashed_messages = get_flashed_messages()
 
-	assert "You don&#39;t have enough points" in str(r.data)
+	assert r.status_code == 302
+	assert "You don't have enough points to book that many places" in flashed_messages
+	assert club['points'] == current_points
 
-def test_more_than_12_places(lots_of_points_club, simple_competition):
-	app.testing
-	with app.test_client() as c:
+def test_more_than_12_places(mocker):
+	club = get_item(server.clubs, lambda x: x['name'] == "simple_club")
+	competition = get_item(server.competitions, lambda x: x['name'] == "simple_competition")
+	mocker.patch.object(server, 'club', club)
+	current_points = club['points']
+
+	server.app.testing
+	with server.app.test_client() as c:
 		data = {
-			'club': lots_of_points_club['name'],
-			'competition': simple_competition['name'],
-			'places': 24
+			'club': club['name'],
+			'competition': competition['name'],
+			'places': 15
 		}
 		r = c.post('/purchasePlaces', data=data)
+		flashed_messages = get_flashed_messages()
 
-	assert "You can&#39;t request more than 12 places" in str(r.data)
-
-def test_points_update(simple_club, simple_competition):
-	app.testing
-	current_points = simple_club['points']
-	with app.test_client() as c:
-		data = {
-			'club': simple_club['name'],
-			'competition': simple_competition['name'],
-			'places': 2
-		}
-		r = c.post('/purchasePlaces', data=data)
-	new_points = simple_club['points']
-
-	assert new_points == current_points - 2
+	assert r.status_code == 302
+	assert "You can't request more than 12 places" in flashed_messages
+	assert club['points'] == current_points
