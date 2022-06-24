@@ -45,6 +45,7 @@ def book(competition):
 	competition = get_item(competitions, lambda c: c['name'] == competition)
 
 	if club is None or competition is None:
+		print(club)
 		flash("Something went wrong-please try again")
 		return redirect(url_for('show_summary'))
 	elif date_is_past(competition['date']):
@@ -61,7 +62,7 @@ def purchase_places():
 	places_requested = int(request.form['places'])
 	if err := purchase_error(places_requested, club['points']):
 		flash(err)
-		return redirect(url_for('book', competition=competition))
+		return redirect(url_for('book', competition=competition['name']))
 	else:
 		competition['numberOfPlaces'] -= places_requested
 		club['points'] -= places_requested
@@ -76,6 +77,7 @@ def display_board():
 
 @app.route('/logout')
 def logout():
-	club=None
+	global club
+	club = None
 	return redirect(url_for('index'))
 	
