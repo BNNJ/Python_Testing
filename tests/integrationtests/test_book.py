@@ -29,5 +29,5 @@ def test_past_competition(mocker):
 		flashed_messages = get_flashed_messages()
 
 	assert r.status_code == 302
-	assert 'You should be redirected automatically to target URL: <a href="/showSummary">/showSummary</a>' in str(r.data)
+	assert 'You should be redirected automatically to the target URL: <a href="/showSummary">/showSummary</a>' in str(r.data)
 	assert "This competition has already taken place" in flashed_messages

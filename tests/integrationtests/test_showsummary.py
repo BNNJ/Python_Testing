@@ -16,7 +16,7 @@ def test_login():
 	assert r.status_code == 302
 	assert flashed_messages == []
 	assert server.club is club
-	assert 'You should be redirected automatically to target URL: <a href="/showSummary">/showSummary</a>' in str(r.data)
+	assert 'You should be redirected automatically to the target URL: <a href="/showSummary">/showSummary</a>' in str(r.data)
 
 def test_invalidmail():
 	email = "thisemaildoesntexist@fakemail.com"
@@ -28,7 +28,7 @@ def test_invalidmail():
 
 	assert r.status_code == 302
 	assert "No club with this email was found" in flashed_messages
-	assert 'You should be redirected automatically to target URL: <a href="/">/</a>' in str(r.data)
+	assert 'You should be redirected automatically to the target URL: <a href="/">/</a>' in str(r.data)
 
 def test_showsummary(mocker):
 	club = get_item(server.clubs, lambda x: x['name'] == "simple_club")
