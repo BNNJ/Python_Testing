@@ -1,12 +1,6 @@
 from flask import Flask, render_template, request, redirect, flash, url_for
 
-from utils import (
-	load_clubs,
-	load_competitions,
-	get_item,
-	date_is_past,
-	purchase_error
-)
+from utils import load_clubs, load_competitions, get_item, date_is_past, purchase_error
 
 app = Flask(__name__)
 app.secret_key = "something_special"
@@ -19,66 +13,68 @@ clubs = load_clubs(clubs_file)
 
 club = None
 
-@app.route('/')
+
+@app.route("/")
 def index():
-	return render_template('index.html')
+    return render_template("index.html")
 
 
-@app.route('/login', methods=['POST'])
+@app.route("/login", methods=["POST"])
 def login():
-	global club 
-	club = get_item(clubs, lambda c: c['email'] == request.form['email'])
-	if club is None:
-		flash("No club with this email was found")
-		return redirect(url_for('index'))
-	else:
-		return redirect(url_for('show_summary'))
+    global club
+    club = get_item(clubs, lambda c: c["email"] == request.form["email"])
+    if club is None:
+        flash("No club with this email was found")
+        return redirect(url_for("index"))
+    else:
+        return redirect(url_for("show_summary"))
 
 
-@app.route('/showSummary')
+@app.route("/showSummary")
 def show_summary():
-	return render_template('welcome.html', club=club, competitions=competitions)
+    return render_template("welcome.html", club=club, competitions=competitions)
 
 
-@app.route('/book/<competition>')
+@app.route("/book/<competition>")
 def book(competition):
-	competition = get_item(competitions, lambda c: c['name'] == competition)
+    competition = get_item(competitions, lambda c: c["name"] == competition)
 
-	if club is None or competition is None:
-		print(club)
-		flash("Something went wrong-please try again")
-		return redirect(url_for('show_summary'))
-	elif date_is_past(competition['date']):
-		flash("This competition has already taken place")
-		return redirect(url_for('show_summary'))
-	else:
-		return render_template('booking.html', club=club, competition=competition)
+    if club is None or competition is None:
+        print(club)
+        flash("Something went wrong-please try again")
+        return redirect(url_for("show_summary"))
+    elif date_is_past(competition["date"]):
+        flash("This competition has already taken place")
+        return redirect(url_for("show_summary"))
+    else:
+        return render_template("booking.html", club=club, competition=competition)
 
 
-@app.route('/purchasePlaces', methods=['POST'])
+@app.route("/purchasePlaces", methods=["POST"])
 def purchase_places():
-	competition = get_item(competitions, lambda c: c['name'] == request.form['competition'])
+    competition = get_item(
+        competitions, lambda c: c["name"] == request.form["competition"]
+    )
 
-	places_requested = int(request.form['places'])
-	if err := purchase_error(places_requested, club['points']):
-		flash(err)
-		return redirect(url_for('book', competition=competition['name']))
-	else:
-		competition['numberOfPlaces'] -= places_requested
-		club['points'] -= places_requested
-		flash("Great-booking complete!")
-		return redirect(url_for('show_summary'))
+    places_requested = int(request.form["places"])
+    if err := purchase_error(places_requested, club["points"]):
+        flash(err)
+        return redirect(url_for("book", competition=competition["name"]))
+    else:
+        competition["numberOfPlaces"] -= places_requested
+        club["points"] -= places_requested
+        flash("Great-booking complete!")
+        return redirect(url_for("show_summary"))
 
 
-@app.route('/displayBoard')
+@app.route("/displayBoard")
 def display_board():
-	return render_template('display_board.html', clubs=clubs)
+    return render_template("display_board.html", clubs=clubs)
 
 
-@app.route('/logout')
+@app.route("/logout")
 def logout():
-	global club
-	club = None
-	flash("Goodbye, see you soon!")
-	return redirect(url_for('index'))
-	
+    global club
+    club = None
+    flash("Goodbye, see you soon!")
+    return redirect(url_for("index"))
