@@ -1,4 +1,3 @@
-import pytest
 from flask import get_flashed_messages
 
 import server

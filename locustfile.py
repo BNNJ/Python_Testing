@@ -1,5 +1,3 @@
-import time
-
 from random import choice, randint
 from locust import HttpUser, task, between
 
