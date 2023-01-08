@@ -22,15 +22,13 @@ class TestGetItem:
 
     @staticmethod
     def test_not_found(haystack):
-        expected = None
         actual = get_item(haystack, lambda c: c["bar"] == "unkown")
         assert actual is None
 
     @staticmethod
     def test_invalid_key(haystack):
-        expected = None
         with pytest.raises(KeyError):
-            actual = get_item(haystack, lambda c: c["baz"] == "invalid")
+            get_item(haystack, lambda c: c["baz"] == "invalid")
 
 
 class TestLoadClubs:
@@ -44,13 +42,11 @@ class TestLoadClubs:
     @staticmethod
     def test_file_not_found():
         with pytest.raises(FileNotFoundError):
-            clubs = load_clubs("invalid_file.json")
+            load_clubs("invalid_file.json")
 
     @staticmethod
     def test_type():
         clubs = load_clubs("tests/test_clubs.json")
-        # expected = 'list'
-        # actual = type(clubs)
         assert isinstance(clubs, list)
 
 
@@ -65,7 +61,7 @@ class TestLoadCompetitions:
     @staticmethod
     def test_file_not_found():
         with pytest.raises(FileNotFoundError):
-            clubs = load_competitions("invalid_file.json")
+            load_competitions("invalid_file.json")
 
     @staticmethod
     def test_type():
@@ -94,14 +90,14 @@ class TestDateIsPast:
     def test_invalid_format():
         date = "2112/21/21 12:21:12"
         with pytest.raises(ValueError):
-            actual = date_is_past(date)
+            date_is_past(date)
 
     @staticmethod
     def test_invalid_format_string():
-        date = "2112/21/21 12:21:12"
+        date = "2112-21-21 12:21:12"
         formatstr = "invalid"
         with pytest.raises(ValueError):
-            actual = date_is_past(date, formatstr)
+            date_is_past(date, formatstr)
 
 
 class TestPurchaseError:

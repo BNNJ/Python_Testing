@@ -15,7 +15,7 @@
 	   </ul>
 	{% endif %}
 	{% endwith %}
-	<a href="{{ url_for('show_summary') }}">Back to summary</a>
+	<a href="{{ url_for('show_summary') }}">Back to summary</a></br>
 	Places available: {{competition['numberOfPlaces']}}
 	<form action="/purchasePlaces" method="post">
 		<input type="hidden" name="club" value="{{club['name']}}">
